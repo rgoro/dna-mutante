@@ -90,14 +90,14 @@ class TestADNMutante(unittest.TestCase):
         the_exception = cm.exception
         self.assertEqual(str(the_exception), "Secuencia de ADN demasiado chica (N = 3)")
 
-    #def test_adn_inconsistente(self):
-    #    adn = ["atct", "gattt", "acga", "aatc"]
+    def test_adn_inconsistente(self):
+        adn = ["atct", "gattt", "acga", "aatc"]
 
-    #    with self.assertRaises(Exception) as cm:
-    #        esMutante(adn)
+        with self.assertRaises(ADNException) as cm:
+            esMutante(adn)
 
-    #    the_exception = cm.exception
-    #    self.assertEqual(str(the_exception), "Secuencia de dimensiones inválidas (esperaba 4 y la 1-esima fila mide 5)")
+        the_exception = cm.exception
+        self.assertEqual(str(the_exception), "Secuencia de dimensiones inválidas (esperaba 4 y la 1-esima fila mide 5)")
 
 if __name__ == '__main__':
     unittest.main()
