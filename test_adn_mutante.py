@@ -3,7 +3,7 @@
 
 import unittest
 
-from adn_mutante import esMutante
+from adn_mutante import esMutante, ADNException
 
 class TestADNMutante(unittest.TestCase):
 
@@ -60,7 +60,7 @@ class TestADNMutante(unittest.TestCase):
     def test_seisPorSeis_letraInvalida(self):
         adn = ["actggt", "ggcact", "catrta", "ttatcg", "catcaa", "aggatc"]
 
-        with self.assertRaises(Exception) as cm:
+        with self.assertRaises(ADNException) as cm:
             esMutante(adn)
 
         the_exception = cm.exception
@@ -84,7 +84,7 @@ class TestADNMutante(unittest.TestCase):
     def test_adn_chico(self):
         adn = ["atc", "gat", "cga"]
 
-        with self.assertRaises(Exception) as cm:
+        with self.assertRaises(ADNException) as cm:
             esMutante(adn)
 
         the_exception = cm.exception

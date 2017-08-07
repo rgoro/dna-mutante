@@ -5,13 +5,16 @@ class LetraSecuencia:
     letra = None
     secuencia = 0
 
+class ADNException(Exception):
+    pass
+
 def esMutante(adn):
     letras_validas = "atcg"
 
     #Inicialización de la estructura para el cálculo
     N = len(adn)
     if N < 4:
-        raise Exception("Secuencia de ADN demasiado chica (N = " + str(N) + ")")
+        raise ADNException("Secuencia de ADN demasiado chica (N = " + str(N) + ")")
 
     secuencias = 0
     
@@ -31,14 +34,14 @@ def esMutante(adn):
 
     for i in range(0, N):
         if len(adn[i]) != N:
-            raise Exception("Secuencia de dimensiones inválidas (esperaba " + str(N) + " y la " + str(i) + "-esima fila mide " + str(len(adn[i])) + ")")
+            raise ADNException("Secuencia de dimensiones inválidas (esperaba " + str(N) + " y la " + str(i) + "-esima fila mide " + str(len(adn[i])) + ")")
 
         adn[i] = adn[i].lower()
 
         sec_horizontal = 1
         for j in range(0, N):
             if adn[i][j] not in letras_validas:
-                raise Exception("Letra inválida: «" + adn[i][j] + "»")
+                raise ADNException("Letra inválida: «" + adn[i][j] + "»")
 
             #Fila
             if j > 0:
