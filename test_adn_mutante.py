@@ -97,7 +97,7 @@ class TestADNMutante(unittest.TestCase):
             esMutante(adn)
 
         the_exception = cm.exception
-        self.assertEqual(str(the_exception), "Secuencia de dimensiones inválidas (esperaba 4 y la 1-esima fila mide 5)")
+        self.assertEqual(str(the_exception), "Secuencia de dimensiones inválidas (esperaba 4 y la 1-ésima fila mide 5)")
 
 if __name__ == '__main__':
     unittest.main()

@@ -34,14 +34,14 @@ def esMutante(adn):
 
     for i in range(0, N):
         if len(adn[i]) != N:
-            raise ADNException("Secuencia de dimensiones inválidas (esperaba " + str(N) + " y la " + str(i) + "-esima fila mide " + str(len(adn[i])) + ")")
+            raise ADNException("Secuencia de dimensiones inválidas (esperaba " + str(N) + " y la " + str(i) + "-ésima fila mide " + str(len(adn[i])) + ")")
 
         adn[i] = adn[i].lower()
 
         sec_horizontal = 1
         for j in range(0, N):
             if adn[i][j] not in letras_validas:
-                raise ADNException("Letra inválida: «" + adn[i][j] + "»")
+                raise ADNException("Letra inválida: «" + str(adn[i][j]) + "»")
 
             #Fila
             if j > 0:
