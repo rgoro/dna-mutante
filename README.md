@@ -109,4 +109,6 @@ Se eligió Amazon Web Services como solución de hosting dado a que ya se contab
 ### Base de datos
 Los ADNs consultados se guardan en la base de datos identificándolos con un hash de la secuencia, concatenando todos los strings de la tabla.  En esta implementación se optó por tomar los primeros 10 dígitos de un *SHA1* de este string, dado que el hash completo resulta un número demasiado grande para usar de identificador en la base de datos.  Por supuesto esta opción no es la mejor, dado que tomar una parte del hash es vulnerable a las colisiones.  En una solución productiva podría ser conveniente buscar otra función de hash o bien desarrollar una propia, teniendo en cuenta que las cadenas tienen sólo 4 caracteres posibles.
 
+Las estadísticas se actualizan dinámicamente ante cada nuevo testeo.  No estaba claro en el enunciado, por lo que se decidió interpretar "count_human_dna" como el total de los ADNs testeados (y no sólo aquellos para los que el test da falso).
+
 Hay un mínimo test de unidad para el acceso a la base de datos, `test_adn_db.py`, que se puede correr teniendo una copia local de DynamoDB (ver http://docs.aws.amazon.com/amazondynamodb/latest/gettingstartedguide/Welcome.html para instrucciones de instalación).
