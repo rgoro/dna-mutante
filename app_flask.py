@@ -24,7 +24,7 @@ def post_mutant():
             es_mutante = bool(adn_db.get_test(dna)['esMutante'])
         else:
             es_mutante = esMutante(dna)
-            adn_db.guardar_test(dna, esMutante)
+            adn_db.guardar_test(dna, es_mutante)
 
         return jsonify({"esMutante" : es_mutante}), (200 if es_mutante else 403)
     except ADNException as adn_ex:
