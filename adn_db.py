@@ -9,7 +9,6 @@ from botocore.exceptions import ClientError
 
 class ADNDb:
     db = None
-    db_endpoint_url = "http://localhost:8080"
     nombre_tabla_adn = "ADN"
     nombre_tabla_stat = "stat"
     tabla_adn = None
@@ -18,15 +17,28 @@ class ADNDb:
     stat_actual = None 
 
     def __init__(self, endpoint_url = None):
-        self.db = boto3.resource('dynamodb', region_name='us-east-1')
+        if endpoint_url == None:
+            self.db = boto3.resource('dynamodb', region_name='us-east-1')
+        else:
+            self.db = boto3.resource('dynamodb', endpoint_url = endpoint_url)
 
-        #Si las tablas no existen, las creo
-        tabla_names = boto3.client('dynamodb', region_name='us-east-1').list_tables()['TableNames']
+            #Si las tablas no existen, las creo
+            self.crear_tablas(endpoint_url)
 
-        #self.db = boto3.resource('dynamodb', endpoint_url= self.db_endpoint_url if endpoint_url == None else endpoint_url)
+        #Inicializo las estadísticas
+        stat_en_db = self.get_stat_en_db()
 
-        ##Si las tablas no existen, las creo
-        #tabla_names = boto3.client('dynamodb', endpoint_url="http://localhost:8080").list_tables()['TableNames']
+        if stat_en_db == None:
+            self.stat_actual = {
+                'count_mutant_dna': 0,
+                'count_human_dna': 0,
+                'ratio': 0,
+            }
+        else:
+            self.stat_actual = stat_en_db
+
+    def crear_tablas(self, endpoint_url):
+        tabla_names = boto3.client('dynamodb', endpoint_url="http://localhost:8080").list_tables()['TableNames']
 
         if self.nombre_tabla_adn in tabla_names:
             self.tabla_adn = self.db.Table(self.nombre_tabla_adn)
@@ -86,18 +98,6 @@ class ADNDb:
                     }
 
                 )
-
-        #Inicializo las estadísticas
-        stat_en_db = self.get_stat_en_db()
-
-        if stat_en_db == None:
-            self.stat_actual = {
-                'count_mutant_dna': 0,
-                'count_human_dna': 0,
-                'ratio': 0,
-            }
-        else:
-            self.stat_actual = stat_en_db
 
 
     def get_stat_en_db(self):
