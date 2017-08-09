@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return "Hello, World!"
+    return "Test de ADN mutante."
 
 @app.route('/mutant', methods=['POST'])
 def post_mutant():
