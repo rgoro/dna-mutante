@@ -18,10 +18,15 @@ class ADNDb:
     stat_actual = None 
 
     def __init__(self, endpoint_url = None):
-        self.db = boto3.resource('dynamodb', endpoint_url= self.db_endpoint_url if endpoint_url == None else endpoint_url)
+        self.db = boto3.resource('dynamodb', region_name='us-east-1')
 
         #Si las tablas no existen, las creo
-        tabla_names = boto3.client('dynamodb', endpoint_url="http://localhost:8080").list_tables()['TableNames']
+        tabla_names = boto3.client('dynamodb', region_name='us-east-1').list_tables()['TableNames']
+
+        #self.db = boto3.resource('dynamodb', endpoint_url= self.db_endpoint_url if endpoint_url == None else endpoint_url)
+
+        ##Si las tablas no existen, las creo
+        #tabla_names = boto3.client('dynamodb', endpoint_url="http://localhost:8080").list_tables()['TableNames']
 
         if self.nombre_tabla_adn in tabla_names:
             self.tabla_adn = self.db.Table(self.nombre_tabla_adn)
