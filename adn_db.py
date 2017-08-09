@@ -82,6 +82,19 @@ class ADNDb:
 
                 )
 
+        #Inicializo las estadísticas
+        stat_en_db = self.get_stat_en_db()
+
+        if stat_en_db == None:
+            self.stat_actual = {
+                'count_mutant_dna': 0,
+                'count_human_dna': 0,
+                'ratio': 0,
+            }
+        else:
+            self.stat_actual = stat_en_db
+
+
     def get_stat_en_db(self):
         try:
             response = self.tabla_stat.get_item(Key={'id':self.stat_id})
@@ -95,18 +108,6 @@ class ADNDb:
             raise
 
     def get_stat(self):
-        if self.stat_actual == None:
-            stat_en_db = self.get_stat_en_db()
-
-            if stat_en_db == None:
-                return {
-                    'count_mutant_dna': 0,
-                    'count_human_dna': 0,
-                    'ratio': 0,
-                }
-            else:
-                self.stat_actual = stat_en_db
-
         return self.stat_actual
 
     def actualizar_stat(self, esMutante):
