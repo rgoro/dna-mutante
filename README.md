@@ -32,7 +32,7 @@ Se implementaron los siguientes tests:
 * Un test para confirmar que ante un string de tamaño diferente a N se lanza una excepción.
 
 ### API
-Se implementó una API para exponer este test de ADN mutante al público.  Para eso se usó *Flask*, un *microframework* para desarrollo web en Python. La API se puede testear en http://ec2-54-175-60-181.compute-1.amazonaws.com:5000/ . En esta versión deployada están cargados los dos ejemplos del enunciado.
+Se implementó una API para exponer este test de ADN mutante al público.  Para eso se usó *Flask*, un *microframework* para desarrollo web en Python. La API se puede testear en http://ec2-54-175-60-181.compute-1.amazonaws.com:5000/. En esta versión deployada están cargados los dos ejemplos del enunciado.
 
 La interfaz de la API es la siguiente:
 
