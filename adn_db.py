@@ -156,6 +156,7 @@ class ADNDb:
             return item
         except ClientError as e:
             print(e.response['Error']['Message'])
+            raise
 
     def existe_adn(self, adn):
         try:
@@ -164,4 +165,5 @@ class ADNDb:
             return items['Count'] > 0
         except ClientError as e:
             print(e.response['Error']['Message'])
+            raise
 
