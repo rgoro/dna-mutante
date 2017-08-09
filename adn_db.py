@@ -24,7 +24,7 @@ class ADNDb:
         tabla_names = boto3.client('dynamodb', endpoint_url="http://localhost:8080").list_tables()['TableNames']
 
         if self.nombre_tabla_adn in tabla_names:
-            self.tabla_adn = self.db.table(self.nombre_tabla_adn)
+            self.tabla_adn = self.db.Table(self.nombre_tabla_adn)
         else:
             self.tabla_adn = self.db.create_table(
                     TableName = self.nombre_tabla_adn,
@@ -55,7 +55,7 @@ class ADNDb:
                 )
 
         if self.nombre_tabla_stat in tabla_names:
-            self.tabla_stat = self.db.table(self.nombre_tabla_stat)
+            self.tabla_stat = self.db.Table(self.nombre_tabla_stat)
         else:
             self.tabla_stat = self.db.create_table(
                     TableName = self.nombre_tabla_stat,
