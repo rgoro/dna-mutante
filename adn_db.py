@@ -82,16 +82,30 @@ class ADNDb:
 
                 )
 
-        
+    def get_stat_en_db(self):
+        try:
+            response = self.tabla_stat.get_item(Key={'id':self.stat_id})
+            if response.has_key('Item'):
+                return json.loads(response['Item']['stat_json'])
+            else:
+                return None
+
+        except ClientError as e:
+            print(e.response['Error']['Message'])
+            raise
+
     def get_stat(self):
         if self.stat_actual == None:
-            try:
-                response = self.tabla_stat.get_item(Key={'id':self.stat_id})
-                if response.has_key('Item'):
-                    self.stat_actual = json.loads(response['Item']['stat_json'])
+            stat_en_db = self.get_stat_en_db()
 
-            except ClientError as e:
-                print(e.response['Error']['Message'])
+            if stat_en_db == None:
+                return {
+                    'count_mutant_dna': 0,
+                    'count_human_dna': 0,
+                    'ratio': 0,
+                }
+            else:
+                self.stat_actual = stat_en_db
 
         return self.stat_actual
 

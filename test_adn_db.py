@@ -27,7 +27,9 @@ class TestADNDb(unittest.TestCase):
     
     def test_empiezoDeCero(self):
         stat_inicial = self.ADNDb.get_stat()
-        self.assertIsNone(stat_inicial)
+        self.assertEqual(stat_inicial['count_mutant_dna'], 0)
+        self.assertEqual(stat_inicial['count_human_dna'], 0)
+        self.assertEqual(stat_inicial['ratio'], 0)
         self.assertFalse(self.ADNDb.existe_adn(self.adn1))
         self.assertFalse(self.ADNDb.existe_adn(self.adn2))
 
