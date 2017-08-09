@@ -22,11 +22,6 @@ class TestADNMutante(unittest.TestCase):
 
         self.assertTrue(esMutante(adn))
 
-    def test_seisPorSeis_dobleHorizontal(self):
-        adn = ["aaaaaa", "cagtgc", "ttctat", "agaagg", "ctccta", "tcactg"]
-
-        self.assertFalse(esMutante(adn))
-
     def test_seisPorSeis_dosHorizontales_bis(self):
         adn = ["aaaaga", "cagtgc", "ttctat", "agaagg", "tacccc", "tcactg"]
 
@@ -56,6 +51,11 @@ class TestADNMutante(unittest.TestCase):
         adn = ["acgtta", "tactcg", "acttct", "ttacgg", "accgga", "gctata"]
 
         self.assertTrue(esMutante(adn))
+
+    def test_seisPorSeis_dobleHorizontal(self):
+        adn = ["aaaaaa", "cagtgc", "ttctat", "agaagg", "ctccta", "tcactg"]
+
+        self.assertFalse(esMutante(adn))
 
     def test_seisPorSeis_mayusculasValen(self):
         adn = ["actgag", "gGagtt", "attacc", "agcAca", "AATGCC", "actact"]
