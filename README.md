@@ -32,20 +32,22 @@ Se implementaron los siguientes tests:
 * Un test para confirmar que ante un string de tamaño diferente a N se lanza una excepción.
 
 ### API
-Se implementó una API para exponer este test de ADN mutante al público.  Para eso se usó *Flask*, un *microframework* para desarrollo web en Python. La API se puede testear en http://ec2-54-175-60-181.compute-1.amazonaws.com:5000/ 
+Se implementó una API para exponer este test de ADN mutante al público.  Para eso se usó *Flask*, un *microframework* para desarrollo web en Python. La API se puede testear en http://ec2-54-175-60-181.compute-1.amazonaws.com:5000/ . En esta versión deployada están cargados los dos ejemplos del enunciado.
 
 La interfaz de la API es la siguiente:
 
-* `/mutant` -- POST para determinar si una secuencia de adn corresponde a un mutante o no 
+* [/mutant](http://ec2-54-175-60-181.compute-1.amazonaws.com:5000/mutant) -- POST para determinar si una secuencia de adn corresponde a un mutante o no 
   + Recibe un JSON según el formato que se especifica más adelante
   + Respuestas posibles:
-    * HTTP 200 Si el ADN es mutante, junto con un json de salida válida (ver más abajo)
-    * HTTP 403 Si el ADN no es mutante, junto con un json de salida válida (ver más abajo)
-    * HTTP 400 Si la secuencia de entrada es inválida, junto con un json de salida erróneo (ver más abajo)
-    * HTTP 500 Si se produce otro tipo de error, junto con un json de salida erróneo (ver más abajo)
+    * HTTP 200 Si el ADN es mutante, junto con un JSON de salida válida (ver más abajo)
+    * HTTP 403 Si el ADN no es mutante, junto con un JSON de salida válida (ver más abajo)
+    * HTTP 400 Si la secuencia de entrada es inválida, junto con un JSON de salida erróneo (ver más abajo)
+    * HTTP 500 Si se produce otro tipo de error, junto con un JSON de salida erróneo (ver más abajo)
+* [/stats](http://ec2-54-175-60-181.compute-1.amazonaws.com:5000/stats) -- GET para obtener las estadísticas de los ADNs registrados
+  + Responde con un JSON según el formato especificado más abajo
 
 #### JSONs de entrada
-El json de entrada es:
+El JSON de entrada es:
 
 ```javascript
 {
@@ -56,7 +58,9 @@ El json de entrada es:
 Donde `secuencia` es un array de strings según el formato esperado por el problema (N strings de largo N; sólo las letras 'a', 't', 'c' y 'g')
 
 #### JSONs de salida
-En una salida válida el POST devuelve un json con el formato
+
+##### Para `/mutant`
+En una salida válida el POST devuelve un JSON con el formato
 
 ```javascript
 {
@@ -71,6 +75,16 @@ En caso de error devuelve
 }
 ```
 
+##### Para `/stats`
+Devuelve un JSON con el siguiente formato.
+
+```javascript
+{
+  "count_human_dna": int, 
+  "count_mutant_dna": int, 
+  "ratio": float
+}
+```
 
 ## Detalles de implementación
 
@@ -81,3 +95,18 @@ El chequeo de la secuencia de ADN se hace recorriendo la tabla una sola vez.  Es
 
 La operatoria con esta información es siempre la misma.  Para cada caracter de cada *string* se compara con la letra anterior para las secuencias horizontales y con la información correspondiente en V, DID y DDI, si corresponde.  Si es la misma letra, se aumenta en 1 el largo de secuencia, si no se pone en 1 y se reemplaza la letra.  Cuando un largo de secuencia en cualquiera de estas direcciones alcanza 4 se anota que hay una secuencia potencialmente mutante y, ni bien se detectan 2, se devuelve `True`.
 
+### API
+La API está implementada de la forma más sencilla posible, y servida directamente desde Python.  No se implementó ningún tipo de resguardo de carga ya que, para evaluar y testear correctamente los requerimientos de capacidad de carga es necesario ejecutar una serie de tests de costo (en tiempo y valor) excesivo para este ejercicio.  Opciones a considerar si se quisiera deployar la aplicación "de verdad" incluyen:
+
+* **AWS Elastic Beanstalk** Es un entorno de depoyment propio de amazon para hostear aplicaciones, independientemente de la tecnología de implementación.  Brinda todas las herramientas propias de monitoreo y balanceo de carga de amazon, pero acopla la aplicación al entorno productivo.
+* **NGINX** u otro servidor web liviano.  Esta es la solución más flexible, pero con mayor carga de configuración del lado del equipo de desarrollo/devOps.  Se propone nginx por contar con experiencia con la herramienta, pero asimismo se podría usar lighthttpd. No se recomienda usar Apache si se busca un entorno liviano y rápido.
+
+Independientemente del hosting elegido, sería necesaria alguna solución de cache para reducir los requests sobre el servidor.  Se puede usar *Varnish* o alguna herramienta similar en un servidor aparte.
+
+
+Se eligió Amazon Web Services como solución de hosting dado a que ya se contaba con cierta experiencia en dicho ambiente.  Se eligió como base de datos *DynamoDB*, base de datos *NoSQL* propia de Amazon, por ser donde se estaba deployando el trabajo.  No se optó por una solución SQL debido a que se consideró que la sencillez de los datos no merecía más complejidad.
+
+### Base de datos
+Los ADNs consultados se guardan en la base de datos identificándolos con un hash de la secuencia, concatenando todos los strings de la tabla.  En esta implementación se optó por tomar los primeros 10 dígitos de un *SHA1* de este string, dado que el hash completo resulta un número demasiado grande para usar de identificador en la base de datos.  Por supuesto esta opción no es la mejor, dado que tomar una parte del hash es vulnerable a las colisiones.  En una solución productiva podría ser conveniente buscar otra función de hash o bien desarrollar una propia, teniendo en cuenta que las cadenas tienen sólo 4 caracteres posibles.
+
+Hay un mínimo test de unidad para el acceso a la base de datos, `test_adn_db.py`, que se puede correr teniendo una copia local de DynamoDB (ver http://docs.aws.amazon.com/amazondynamodb/latest/gettingstartedguide/Welcome.html para instrucciones de instalación).
